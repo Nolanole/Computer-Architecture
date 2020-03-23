@@ -76,7 +76,6 @@ class CPU:
     def run(self):
         """Run the CPU."""
 
-        halt = False
         while not self.halt:
             ir = self.ram_read(self.pc)
             operand_a = self.ram_read(self.pc+1)
