@@ -2,12 +2,19 @@
 
 import sys
 
+LDI = 0b10000010 #Set the value of a register to an integer
+PRN = 0b01000111 #Print numeric value stored in the given register
+HLT = 0b00000001 #Halt the CPU (and exit the emulator)
+
 class CPU:
     """Main CPU class."""
 
     def __init__(self):
         """Construct a new CPU."""
-        pass
+        self.pc = 0
+        self.ram = [0] * 256
+        self.reg = [0] * 8
+        self.halt = False
 
     def load(self):
         """Load a program into memory."""
@@ -29,7 +36,7 @@ class CPU:
         for instruction in program:
             self.ram[address] = instruction
             address += 1
-
+            
 
     def alu(self, op, reg_a, reg_b):
         """ALU operations."""
@@ -39,6 +46,12 @@ class CPU:
         #elif op == "SUB": etc
         else:
             raise Exception("Unsupported ALU operation")
+    
+    def ram_read(self, MAR):
+        return self.ram[MAR]
+
+    def ram_write(self, MAR, MDR):
+        self.ram[MAR] = MDR
 
     def trace(self):
         """
@@ -62,4 +75,20 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+
+        halt = False
+        while not self.halt:
+            ir = self.ram_read(self.pc)
+            operand_a = self.ram_read(self.pc+1)
+            operand_b = self.ram_read(self.pc+2)
+            if ir == LDI:
+                self.reg[operand_a] = operand_b
+                self.pc += 3
+            elif ir == PRN:
+                print(self.reg[operand_a])
+                self.pc += 2
+            elif ir == HLT:
+                self.halt = True
+            else:
+                print('unknown command')
+                self.pc += 1
