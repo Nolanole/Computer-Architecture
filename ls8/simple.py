@@ -66,5 +66,23 @@ while running:
         sys.exit(1)
 
 
+#Tuesday adds:
+
+if len(sys.argv) != 2:
+    print('Usage: cpu.py filename')
+    sys.exit(1)
+
+progname = sys.argv[1]
+
+address = 0
+
+with open(progname) as f:
+    for line in f:
+        line = line.split('#')[0].strip()
+        if line == '':
+            continue
+        val = int(line) #<--base 10.. add <, 2> for base 2
+        memory[address] = val
+        address += 1
 
 
