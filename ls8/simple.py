@@ -85,4 +85,13 @@ with open(progname) as f:
         memory[address] = val
         address += 1
 
+Wednesday adds:
 
+SP = 7
+register[SP] = 0xf4 #initialize SP to empty stack
+
+
+Thursday:
+
+CALL 
+RET
