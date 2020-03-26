@@ -172,23 +172,44 @@ class CPU:
 
     def handle_JEQ(self, pc):
         '''If equal flag is set (true), jump to the address stored in the given register.'''
-        pass
+        if self.flag == 1:
+            reg = self.get_operands(pc, 1)
+            self.pc = self.reg[reg]
+        else:
+            self.pc += 2
+
 
     def handle_JGE(self, pc):
         '''If greater-than flag or equal flag is set (true), jump to the address stored in the given register.'''
-        pass
+        if self.flag == 1 or self.flag == 2:
+            reg = self.get_operands(pc, 1)
+            self.pc = self.reg[reg]
+        else:
+            self.pc += 2
 
     def handle_JGT(self, pc):
         '''If greater-than flag is set (true), jump to the address stored in the given register.'''
-        pass
+        if self.flag == 2:
+            reg = self.get_operands(pc, 1)
+            self.pc = self.reg[reg]
+        else:
+            self.pc += 2
 
     def handle_JLE(self, pc):
         '''If less-than flag or equal flag is set (true), jump to the address stored in the given register.'''
-        pass
+        if self.flag == 4 or self.flag == 1:
+            reg = self.get_operands(pc, 1)
+            self.pc = self.reg[reg]
+        else:
+            self.pc += 2
 
     def handle_JLT(self, pc):
         '''If less-than flag is set (true), jump to the address stored in the given register.'''
-        pass
+        if self.flag == 4:
+            reg = self.get_operands(pc, 1)
+            self.pc = self.reg[reg]
+        else:
+            self.pc += 2
 
     def handle_JMP(self, pc):
         '''Jump to the address stored in the given register'''
@@ -196,14 +217,21 @@ class CPU:
         reg_num = self.get_operands(pc, 1)
         self.pc = self.reg[reg_num]
 
-    def handle_JNE(self):
+    def handle_JNE(self, pc):
         '''If E flag is clear (false, 0), jump to the address stored in the given register.'''
-        pass
+        if self.flag != 1:
+            reg = self.get_operands(pc, 1)
+            self.pc = self.reg[reg]
+        else:
+            self.pc += 2
     
     def handle_LD(self, pc):
         '''Loads registerA with the value at the memory address stored in registerB.'''
         #This opcode reads from memory.
-        pass
+        reg_a, reg_b = self.get_operands(pc)
+        address = self.reg[reg_b]
+        val = self.ram_read(address)
+        self.reg[reg_a] = val
 
     def handle_LDI(self, pc):
         '''Set the value of a register to an integer.'''
@@ -257,7 +285,9 @@ class CPU:
         '''PRA register pseudo-instruction
         Print alpha character value stored in the given register.'''
         #Print to the console the ASCII character corresponding to the value in the register.   
-        pass
+        reg = self.get_operands(pc, 1)
+        char_int = self.reg[reg]
+        print(chr(char_int))
 
     def handle_PRN(self, pc):
         '''Print numeric value stored in the given register.'''
@@ -298,7 +328,12 @@ class CPU:
     def handle_ST(self, pc):
         '''Store value in registerB in the address stored in registerA.'''
         #This opcode writes to memory.
-        pass
+        reg_a, reg_b = self.get_operands(pc)
+        address = self.reg[reg_a]
+        val = self.reg[reg_b]
+        self.ram_write(address, val)
+
+        #Is this correct?
 
     def handle_SUB(self, pc):
         '''Subtract the value in the second register from the first, storing the result in registerA.'''
