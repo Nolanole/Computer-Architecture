@@ -402,7 +402,7 @@ class CPU:
             self.reg[reg_a] %= self.reg[reg_b]
         elif op == 'NOT':
             #HELP
-            pass
+            self.reg[reg_a] = ~self.reg[reg_a] & 0b11111111
         elif op == 'OR':
             self.reg[reg_a] |= self.reg[reg_b]
         elif op == 'SHL':
